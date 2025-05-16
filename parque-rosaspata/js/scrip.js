@@ -29,33 +29,24 @@ document.addEventListener('DOMContentLoaded', function() {
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const role = document.querySelector('input[name="role"]:checked').value;
+        const formData = new FormData(this);
         
-        // Simulación de login (en un caso real, harías una petición al servidor)
-        if (username && password) {
-            if (role === 'admin') {
-                // Mostrar nav de admin y ocultar nav de usuario
-                userNav.style.display = 'none';
-                adminNav.style.display = 'block';
-                
-                // Guardar en localStorage que es admin
-                localStorage.setItem('userRole', 'admin');
-                
-                // Redirigir al panel de admin
-                window.location.href = 'admin/panel.html';
+        fetch('php/login.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect;
             } else {
-                // Lógica para usuario normal
-                alert('Bienvenido usuario ' + username);
-                // Aquí podrías mostrar opciones de usuario
+                alert(data.message);
             }
-            
-            // Cerrar modal
-            loginModal.style.display = 'none';
-        } else {
-            alert('Por favor ingresa usuario y contraseña');
-        }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al procesar la solicitud');
+        });
     });
     
     // Manejar logout

@@ -1,32 +1,33 @@
 <?php
-require 'conexion.php';
+require_once 'conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $rol = $_POST['role'];
 
     try {
-        $stmt = $conn->prepare("SELECT contraseña FROM usuarios WHERE correo = :username AND rol = :rol");
+        $stmt = $conn->prepare("SELECT id, correo, contraseña, rol FROM usuarios WHERE correo = :username");
         $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':role', $rol);
         $stmt->execute();
-
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['contraseña'])) {
-            // Solo verificamos el rol para redirigir
-            if ($rol === 'admin') {
-                
-                header('Location: |../admin/paneladmin.php');
-                exit();
+        if ($user && hash('sha256', $password) === $user['contraseña']) {
+            session_start();
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['correo'];
+            $_SESSION['role'] = $user['rol'];
+
+            if ($user['rol'] === 'admin') {
+                echo json_encode(['success' => true, 'redirect' => 'admin/paneladmin.php']);
             } else {
-                header('Location: ../index.html');
-                exit();
+                echo json_encode(['success' => true, 'redirect' => 'index.php']);
             }
-        } 
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Usuario o contraseña incorrectos']);
+        }
     } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        echo json_encode(['success' => false, 'message' => 'Error en el servidor']);
     }
+    exit();
 }
 

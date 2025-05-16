@@ -1,0 +1,152 @@
+ body {
+            background: #f4f6f8;
+        }
+        .admin-header {
+            background: linear-gradient(90deg, #388e3c 0%, #43a047 100%);
+            color: #fff;
+            padding: 2rem 0 1rem 0;
+            box-shadow: 0 4px 16px rgba(56,142,60,0.15);
+        }
+        .admin-header .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .admin-header img {
+            height: 60px;
+            margin-right: 18px;
+        }
+        .admin-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .admin-nav {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(56,142,60,0.08);
+            border-radius: 8px;
+            margin: 1.5rem auto 2rem auto;
+            max-width: 1200px;
+            padding: 0.5rem 2rem;
+        }
+        .admin-nav ul {
+            display: flex;
+            justify-content: flex-end;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .admin-nav ul li a, .admin-nav ul li button {
+            color: #388e3c;
+            font-weight: 600;
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            padding: 8px 18px;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+        .admin-nav ul li a:hover, .admin-nav ul li button:hover, .admin-nav ul li a.active {
+            background: #388e3c;
+            color: #fff;
+        }
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(56,142,60,0.10);
+        }
+        h2 {
+            color: #388e3c;
+            margin-top: 2rem;
+            margin-bottom: 1.2rem;
+            font-size: 2rem;
+            border-left: 5px solid #43a047;
+            padding-left: 12px;
+            letter-spacing: 1px;
+        }
+        section {
+            margin-bottom: 2.5rem;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        form label {
+            font-weight: 600;
+            color: #333;
+        }
+        form input, form button, form textarea, form select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #bdbdbd;
+            font-size: 1rem;
+        }
+        form button {
+            background: #388e3c;
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        form button:hover {
+            background: #2e7031;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(56,142,60,0.07);
+        }
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+        }
+        th {
+            background: #388e3c;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+        tr:nth-child(even) {
+            background: #f1f8e9;
+        }
+        tr:hover {
+            background: #e8f5e9;
+        }
+        .table-title {
+            font-size: 1.2rem;
+            color: #2e7031;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        @media (max-width: 900px) {
+            .admin-container {
+                padding: 1rem;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            th, td {
+                padding: 10px 8px;
+            }
+            th {
+                background: #388e3c;
+                color: #fff;
+            }
+            tr {
+                margin-bottom: 1rem;
+            }
+        }

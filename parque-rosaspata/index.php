@@ -1,3 +1,8 @@
+<?php
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']);
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin'; // Corregido
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,8 +28,8 @@
         </nav>
         <nav id="admin-nav" style="display:none;">
             <ul>
-                <li><a href="#" class="active">Panel</a></li>
-                <li><a href="admin/panel.html">Administrar Tickets</a></li>
+                <li><a href="admin/paneladmin.php" class="active">Panel</a></li> <!-- Corregido -->
+                <li><a href="#">Administrar Tickets</a></li>
                 <li><a href="#">Reportes</a></li>
                 <li><a href="#">Usuarios</a></li>
                 <li><button id="logout-btn">Cerrar Sesión</button></li>
@@ -50,26 +55,50 @@
         <section class="tickets">
             <h3>Tickets Disponibles</h3>
             <div class="ticket-cards">
-                <div class="ticket-card">
-                    <h4>Entrada General</h4>
-                    <p class="price">S/ 20.00</p>
-                    <p>Acceso a todas las áreas del parque</p>
-                    <button class="add-to-cart">Añadir al carrito</button>
-                </div>
-                <div class="ticket-card">
-                    <h4>Niños (3-12 años)</h4>
-                    <p class="price">S/ 15.00</p>
-                    <p>Acceso especial para niños</p>
-                    <button class="add-to-cart">Añadir al carrito</button>
-                </div>
-                <div class="ticket-card">
-                    <h4>Adultos Mayores</h4>
-                    <p class="price">S/ 10.00</p>
-                    <p>Descuento para adultos mayores</p>
-                    <button class="add-to-cart">Añadir al carrito</button>
-                </div>
+                <?php
+                require_once 'php/conexion.php';
+                $stmt = $conn->query("SELECT * FROM entradas WHERE estado='disponible'");
+                while ($ticket = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<div class='ticket-card'>";
+                    echo "<h4>{$ticket['descripcion']}</h4>";
+                    echo "<p class='price'>S/ {$ticket['precio']}</p>";
+                    echo "<p>Stock: {$ticket['stock']}</p>";
+                    echo "<input type='number' min='1' max='{$ticket['stock']}' value='1' class='ticket-qty'>";
+                    echo "<button class='add-to-cart' data-id='{$ticket['id']}' data-nombre='{$ticket['descripcion']}' data-precio='{$ticket['precio']}'>Añadir al carrito</button>";
+                    echo "</div>";
+                }
+                ?>
             </div>
+            <button id="go-to-cart" style="margin-top:2rem;display:none;">Ir al carrito</button>
         </section>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carrito en localStorage
+            const cartBtn = document.getElementById('go-to-cart');
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            // Mostrar el botón si ya hay productos en el carrito al cargar la página
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length > 0) {
+                cartBtn.style.display = 'inline-block';
+            }
+            addToCartButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const nombre = this.dataset.nombre;
+                    const precio = this.dataset.precio;
+                    const qty = this.parentElement.querySelector('.ticket-qty').value;
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    cart.push({id, nombre, precio, qty});
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    cartBtn.style.display = 'inline-block';
+                    alert('Ticket añadido al carrito');
+                });
+            });
+            cartBtn.addEventListener('click', function() {
+                window.location.href = 'checkout.php';
+            });
+        });
+        </script>
 
         <section class="login-modal" id="login-modal">  
             <div class="modal-content">
@@ -102,5 +131,9 @@
 
     <script src="js/scrip.js"></script>
     <script src="js/carousel.js"></script>
+    <script>
+    const isLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false' ?>;
+    const isAdmin = <?php echo $isAdmin ? 'true' : 'false' ?>;
+    </script>
 </body>
 </html>
