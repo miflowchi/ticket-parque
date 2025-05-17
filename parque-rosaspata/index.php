@@ -23,7 +23,12 @@ $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin'; // Corregi
                 <li><a href="#">Comprar Tickets</a></li>
                 <li><a href="#">Eventos</a></li>
                 <li><a href="#">Contacto</a></li>
-                <li><button id="login-btn">Iniciar Sesión</button></li>
+                <?php if ($isLoggedIn): ?>
+                    <li><a href="mis_tickets.php">Mis tickets</a></li>
+                    <li><a href="php/logout.php">Cerrar Sesión</a></li>
+                <?php else: ?>
+                    <li><button id="login-btn">Iniciar Sesión</button></li>
+                <?php endif; ?>
             </ul>
         </nav>
         <nav id="admin-nav" style="display:none;">
@@ -95,7 +100,11 @@ $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin'; // Corregi
                 });
             });
             cartBtn.addEventListener('click', function() {
+                <?php if ($isLoggedIn): ?>
                 window.location.href = 'checkout.php';
+                <?php else: ?>
+                window.location.href = 'login.php';
+                <?php endif; ?>
             });
         });
         </script>
